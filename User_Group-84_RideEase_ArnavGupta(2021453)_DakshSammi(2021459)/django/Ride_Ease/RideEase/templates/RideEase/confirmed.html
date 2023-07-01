@@ -1,0 +1,81 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <h1>Congratulations! You are just one step away from making your RideEase</h1>
+    </div>
+    <div class="container">
+      <h2>Here is your payment information:</h2>
+      {% comment %} paymentAmount is printed {% endcomment %}
+      <table>
+          <tr>
+              <th>Payment Amount is:   Rs.</th>
+              <th>{{ paymentAmount }}</th>
+          </tr>
+      </table>
+    </div>
+    <div class="container">
+      <button id="button1" onclick="showMessage()">Pay</button>
+    </div>
+</main>
+<script>
+    document.getElementById("button1").addEventListener("click", function(){
+        console.log("done!");
+        const driver_id = {{ driver.driver_id }};
+        const user_id = {{ user.user_id }};
+        const pickup = "{{ pickup }}";
+        const dropoff = "{{ dropoff }}";
+        fetch(`/inactivate/${driver_id}`)
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to inactivate driver.');
+            }
+            return fetch(`/create_booking/${user_id}/${driver_id}/${pickup}/${dropoff}`)
+            })
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create booking.');
+            }
+            console.log('Booking created successfully.');
+            })
+            .catch(error => {
+            console.error(error);
+            });
+    });
+    function showMessage() {
+        alert("Thanks for choosing us! Happy Ride");
+    }
+    document.getElementById("rzp-button2").addEventListener("click", function(){
+        const userID = {{ user.user_id }};
+        window.location.href = "/homepage/" + userID;
+    });
+</script>
+
+{% endblock %}

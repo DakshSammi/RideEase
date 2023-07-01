@@ -1,0 +1,34 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% block content %}
+  <h1>OLAP Queries</h1>
+    <h3>Query 1</h3>
+    <h5>Retrieve the total distance driven by drivers in the system for each month of the year and each year.</h5>
+        <h6>SELECT YEAR(Tim) AS Booking_Year, MONTH(Tim) AS Booking_Month, DrivID, SUM(Distance) AS Total_Distance</h6>
+        <h6>FROM DrivesFor D</h6>
+        <h6>GROUP BY Booking_Year,Booking_Month,DrivID with ROLLUP</h6>
+        <h6>HAVING GROUPING (Booking_Year)=0 AND GROUPING(Booking_Month)=0 AND GROUPING(DrivID)=0;</h6>
+    <h3>Query 2</h3>
+    <h5>Retrieve the fname and lname of users in the system for each month of the year and each year who have availed a ride</h5>
+        <h6>SELECT YEAR(Tim) AS Booking_Year, MONTH(Tim) AS Booking_Month, Users.fname, Users.lname</h6>
+        <h6>FROM DrivesFor</h6>
+        <h6>GROUP BY Booking_Year, Booking_Month, Users.fname, Users.lname with ROLLUP</h6>
+        <h6>HAVING GROUPING (Booking_Year)=0 AND GROUPING(Booking_Month)=0 AND GROUPING(Users.fname)=0 AND GROUPING(Users.lname)=0;</h6>
+       
+    <h3>Query 3</h3>
+    <h5>Retrieve the number of bookings made for each ride type and the average fare for each ride type.</h5>
+        <h6>SELECT R_type, COUNT(*) AS num_bookings, AVG(Payment_Amount) AS avg_fare</h6>
+        <h6>FROM Ride</h6>
+        <h6>JOIN Payment ON Ride.RideID=Payment.PaymentID</h6>
+        <h6>GROUP BY R_type with ROLLUP</h6>
+        <h6>HAVING GROUPING (R_type)=0;</h6>
+        
+    <h3>Query 4</h3>
+    <h5>Retrieve the names of drivers in the system whose rating is greater than 3 grouped by every month of the year and every year.</h5>
+        <h6>SELECT fname,lname,YEAR(Tim) AS Year,MONTH(Tim) AS Month,Driver_Rating AS Rating</h6>
+        <h6>FROM Driver</h6>
+        <h6>JOIN DrivesFor ON Driver.Driver_ID = DrivesFor.DrivID</h6>
+        <h6>WHERE Driver_Rating>3</h6>
+        <h6>GROUP BY Year,Month,fname,lname,Rating WITH ROLLUP</h6>
+        <h6>HAVING GROUPING(fname) = 0 AND GROUPING(Year) = 0 AND GROUPING(Month) = 0 AND GROUPING(lname) = 0 AND GROUPING(Rating) = 0;</h6>
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    tr:nth-child(even) {background-color: #f2f2f2;}
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <h1>Welcome!</h1>
+    </div>
+    <section id="admin-section">
+        <h2></h2>
+        <h2>SQL Query 1:</h2>
+        <h2></h2>
+        <button id="popular-locations-btn">View Top 3 Most Popular Pickup Locations</button>
+        <div id="popular-locations"></div>
+    </section>
+    <section id="driver-section">
+        <h2></h2>
+        <h2 style>SQL Query 2:<h5>Driver Details</h5></h2>
+        <h2></h2>
+        <form id="driver-form">
+            {% csrf_token %}
+            <label for="driver-id">Enter Driver ID:</label>
+            <input type="number" id="driver-id" name="driver_id" required>
+            <button type="submit">View Details</button>
+        </form>
+        <h5>User Details</h5></h2>
+        <h2></h2>
+        <form id="useer-form">
+            {% csrf_token %}
+            <label for="useer-id">Enter User ID:</label>
+            <input type="number" id="useer-id" name="user_id" required>
+            <button type="submit">View Details</button>
+        </form>
+        <div id="useer-details"></div>
+    </section>
+    <section id="admins-section">
+        <h2></h2>
+        <h2>SQL Query 3:<h5>Inactive Drivers</h5></h2>
+        <h2></h2>
+        <button id="inactive-driver-btn">View Inactive Drivers</button>
+        <div id="inactive-drivers"></div>
+    </section>
+    <section id="olap-section">
+        <h2></h2>
+        <h2>OLAP Query 1:<h5>Total Distance For Every Driver by Month and Year</h5></h2>
+        <h2></h2>
+        <button id="total-distance-btn">View</button>
+        <div id="total-distance"></div>
+    </section>
+    <section id="olap-section2">
+        <h2></h2>
+        <h2>OLAP Query 2:<h5>Retrieve the fname and lname of users in the system for each month of the year and each year who have availed a ride</h5></h2>
+        <h2></h2>
+        <button id="retrieve-btn">View</button>
+        <div id="total-retrieve"></div>
+    </section>
+    <section id="olap-section3">
+        <h2></h2>
+        <h2>OLAP Query 3:<h5>Retrieve the number of bookings made for each ride type and the average fare for each ride type.</h5></h2>
+        <h2></h2>
+        <button id="retrieve-om-btn">View</button>
+        <div id="total-retrieve-om"></div>
+    </section>
+    <section id="olqap-section4">
+        <h2></h2>
+        <h2>OLAP Query 4:<h5>Retrieve the names of drivers in the system whose rating is greater than 3 grouped by every month of the year and every year.</h5></h2>
+        <h2></h2>
+        <button id="retrieve-tuhitu-btn">View</button>
+        <div id="total-retrieve-tuhitu"></div>
+    </section>
+</main>
+{% if message %}
+<div class="alert alert-success" role="alert">
+  {{ message }}
+</div>
+{% endif %}
+<script>
+    const popularLocationsBtn = document.querySelector('#popular-locations-btn');
+    const popularLocationsDiv = document.querySelector('#popular-locations');
+    const driverForm = document.querySelector('#driver-form');
+    const driverDetailsDiv = document.querySelector('#driver-details');
+    const inactiveDriversBtn = document.querySelector('#inactive-driver-btn');
+    const inactiveDriversDiv = document.querySelector('#inactive-drivers');
+    const totalDistanceBtn = document.querySelector('#total-distance-btn');
+    const totalDistanceDiv = document.querySelector('#total-distance');
+    const retrieveBtn = document.querySelector('#retrieve-btn');
+    const retrieveDiv = document.querySelector('#total-retrieve');
+    const retrieveOmBtn = document.querySelector('#retrieve-om-btn');
+    const retrieveOmDiv = document.querySelector('#total-retrieve-om');
+    const retrieveTuhituBtn = document.querySelector('#retrieve-tuhitu-btn');
+    const retrieveTuhituDiv = document.querySelector('#total-retrieve-tuhitu');
+    const useerForm = document.querySelector('#useer-form');
+    const useerDetailsDiv = document.querySelector('#useer-details');
+
+    popularLocationsBtn.addEventListener('click', async () => {
+        const response = await fetch('/pickup-locations/');
+        const data = await response.json();
+        let tableHtml = '<table><thead><tr><th>Location</th><th>Bookings</th></tr></thead><tbody>';
+        data.forEach(location => {
+            tableHtml += `<tr><td>${location.pickup}</td><td>${location.count}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        popularLocationsDiv.innerHTML = tableHtml;
+    });
+
+    driverForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const driverId = document.querySelector('#driver-id').value;
+        window.location.href = `/driver-details/${driverId}/`;
+    });
+
+    inactiveDriversBtn.addEventListener('click', async () => {
+        const response = await fetch('/inactive-drivers/');
+        const data = await response.json();
+        let tableHtml = '<table><thead><tr><th>Driver ID</th><th>Driver Name</th><th>Driver Rating</th><th>Driver Status</th><th>Driver Email</th>';
+        data.forEach(driver => {
+            tableHtml += `<tr><td>${driver.driver_id}</td><td>${driver.fname}</td><td>${driver.driver_rating}</td><td>${driver.dr_status}</td><td>${driver.e_mail}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        inactiveDriversDiv.innerHTML = tableHtml;
+    });
+    
+    totalDistanceBtn.addEventListener('click', async () => {
+        const response = await fetch('/total-distance/');
+        const data = await response.json();
+        let tableHtml = '<table><thead><tr><th>Year</th><th>Month</th><th>Driver ID</th><th>Distance</th>';
+        data.forEach(row => {
+            tableHtml += `<tr><td>${row['year']}</td><td>${row['month']}</td><td>${row['drivid']}</td><td>${row['distance']}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        totalDistanceDiv.innerHTML = tableHtml;
+    });
+
+    retrieveBtn.addEventListener('click', async () => {
+        const response = await fetch('/total-retrieve/');
+        const data = await response.json();
+        let tableHtml = '<table><thead><tr><th>Year</th><th>Month</th><th>First Name</th><th>Last Name</th>';
+        data.forEach(row => {
+            tableHtml += `<tr><td>${row['year']}</td><td>${row['month']}</td><td>${row['fname']}</td><td>${row['lname']}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        retrieveDiv.innerHTML = tableHtml;
+    });
+
+    retrieveOmBtn.addEventListener('click', async () => {
+        const response = await fetch('/total-retrieve-om/');
+        const data = await response.json();
+        let tableHtml = '<table><thead><tr><th>Ride Type</th><th>Number of Bookings</th><th>Average Fare</th>';
+        data.forEach(row => {
+            tableHtml += `<tr><td>${row['type']}</td><td>${row['num_bookings']}</td><td>${row['avg_fare']}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        retrieveOmDiv.innerHTML = tableHtml;
+    });
+
+    retrieveTuhituBtn.addEventListener('click', async () => {
+        const response = await fetch('/total-retrieve-tuhitu/');
+        const data = await response.json();
+        let tableHtml = '<table><thead><tr><th>First Name</th><th>Last Name</th><th>Year</th><th>Month</th><th>Rating</th>';
+        data.forEach(row => {
+            tableHtml += `<tr><td>${row['fname']}</td><td>${row['lname']}</td><td>${row['year']}</td><td>${row['month']}</td><td>${row['rating']}</td></tr>`;
+        });
+        tableHtml += '</tbody></table>';
+        retrieveTuhituDiv.innerHTML = tableHtml;
+    });
+
+    useerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const useerId = document.querySelector('#useer-id').value;
+        window.location.href = `/useer-details/${useerId}/`;
+    });
+
+</script>
+{% endblock content %}
