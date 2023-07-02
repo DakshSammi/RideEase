@@ -2,7 +2,11 @@
 
 {% block content %}
 <section class="vh-100 bg-image"
+<<<<<<< HEAD
   style="background-image: url('https://media.istockphoto.com/id/182859572/photo/fleet-of-yellow-new-york-city-taxi-cabs-from-above.jpg?b=1&s=170667a&w=0&k=20&c=14XtQ6gChlS5DPCozGqqCiB9eFRaCHUqN6SUm5od9fM=');">
+=======
+  style="background-image: url('https://colorlib.com/etc/bforms/colorlib-booking-13/img/background.jpg');">
+>>>>>>> origin/user
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -15,7 +19,11 @@
 
                 
                 {% csrf_token %}
+<<<<<<< HEAD
                 <label for="user-id">Enter Driver ID:</label>
+=======
+                <label for="user-id">Enter User ID:</label>
+>>>>>>> origin/user
                 <input type="number" id="user-id" name="user_id" required>
                 <button type="submit">Login</button>
                 <p>                      </p>
@@ -36,8 +44,13 @@
   const useerDetailsDiv = document.querySelector('#user-details');
   useerForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+<<<<<<< HEAD
     const driverId = document.querySelector('#user-id').value;
     window.location.href = `/homepage/${driverId}`;
+=======
+    const useerId = document.querySelector('#user-id').value;
+    window.location.href = `/homepage/${useerId}`;
+>>>>>>> origin/user
   });
 </script> 
 {% endblock content %}

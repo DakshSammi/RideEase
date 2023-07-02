@@ -42,10 +42,14 @@
       </table>
     </div>
     <div class="container">
+<<<<<<< HEAD
       <button id="button1" onclick="showMessage()">Confirm</button>
     </div>
     <div class="container">
       <button id="rzp-button2">Cancel & Go Back</button>
+=======
+      <button id="button1" onclick="showMessage()">Pay</button>
+>>>>>>> origin/user
     </div>
 </main>
 <script>
@@ -58,7 +62,11 @@
         fetch(`/inactivate/${driver_id}`)
             .then(response => {
             if (!response.ok) {
+<<<<<<< HEAD
                 throw new Error('Failed to activate driver.');
+=======
+                throw new Error('Failed to inactivate driver.');
+>>>>>>> origin/user
             }
             return fetch(`/create_booking/${user_id}/${driver_id}/${pickup}/${dropoff}`)
             })
@@ -73,7 +81,11 @@
             });
     });
     function showMessage() {
+<<<<<<< HEAD
         alert("Your ride has been confirmed!");
+=======
+        alert("Thanks for choosing us! Happy Ride");
+>>>>>>> origin/user
     }
     document.getElementById("rzp-button2").addEventListener("click", function(){
         const userID = {{ user.user_id }};

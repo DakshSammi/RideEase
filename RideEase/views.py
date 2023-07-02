@@ -29,11 +29,19 @@ def index(request):
     return render(request, 'RideEase/index.html', context)
 
 @transaction.atomic
+<<<<<<< HEAD
 def booking_list(request, driver_id, driver_id2):
     if driver_id > 0:
         bookings = Bookings.objects.filter(dri=driver_id).order_by('booking_id')
         driver = Driver.objects.get(driver_id=driver_id2)
         context = {'bookings': bookings, 'driver': driver}
+=======
+def booking_list(request, user_id, user_id2):
+    if user_id > 0:
+        bookings = Bookings.objects.filter(userid=user_id).order_by('booking_id')
+        user = Users.objects.get(user_id=user_id2)
+        context = {'bookings': bookings, 'user': user}
+>>>>>>> origin/user
         return render(request, 'RideEase/Bookings.html', context)
     else:
         return JsonResponse({'error': 'Invalid user ID'})
@@ -125,16 +133,27 @@ def user_details(request, user_id):
 
 from django.shortcuts import render, redirect
 
+<<<<<<< HEAD
 def homepage(request, driver_id):
     driver = Driver.objects.get(driver_id=driver_id)
+=======
+def homepage(request, user_id):
+    user = Users.objects.get(user_id=user_id)
+>>>>>>> origin/user
     if request.method == 'POST':
         distance = request.POST.get('distance')
         ride_type = request.POST.get('ride-type')
         pickup = request.POST.get('pick-id')
         dropoff = request.POST.get('drop-id')
+<<<<<<< HEAD
         return redirect('confirmation', driver_id=driver_id, distance=distance, ride_type=ride_type, pickup=pickup, dropoff=dropoff)
     else:
         return render(request, 'RideEase/homepage.html', {'driver':driver})
+=======
+        return redirect('confirmation', user_id=user_id, distance=distance, ride_type=ride_type, pickup=pickup, dropoff=dropoff)
+    else:
+        return render(request, 'RideEase/homepage.html', {'user': user})
+>>>>>>> origin/user
 
 def confirmation(request, user_id, distance, ride_type, pickup, dropoff):
     user = Users.objects.get(user_id=user_id)
@@ -155,6 +174,10 @@ from .models import Driver, Bookings, Users
 from django.db import connection
 from django.shortcuts import render
 
+<<<<<<< HEAD
+=======
+@transaction.atomic
+>>>>>>> origin/user
 def inactivate(request, driver_id):
     driver = Driver.objects.get(driver_id=driver_id)
     driver.dr_status = 'Inactive'
@@ -172,12 +195,20 @@ def create_booking(request, user_id, driver_id, pickup, dropoff):
 
     return JsonResponse({'status': 'success'})
 
+<<<<<<< HEAD
+=======
+@transaction.atomic
+>>>>>>> origin/user
 def activate(request, driver_id):
     driver = Driver.objects.get(driver_id=driver_id)
     driver.dr_status = 'Active'
     driver.save()
     return JsonResponse({'status': 'success'})
 
+<<<<<<< HEAD
+=======
+@transaction.atomic
+>>>>>>> origin/user
 def confirmed(request, user_id, distance, ride_type, driver_id, pickup, dropoff):
     user = Users.objects.get(user_id=user_id)
     driver = Driver.objects.get(driver_id=driver_id)

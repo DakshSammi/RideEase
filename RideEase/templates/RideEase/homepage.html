@@ -5,6 +5,7 @@
 {% block styles %}
 <style>
     table {
+<<<<<<< HEAD
       border-collapse: collapse;
       width: 100%;
     }
@@ -17,12 +18,32 @@
       color: white;
     }
     tr:nth-child(even) {background-color: #f2f2f2;}
+=======
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+>>>>>>> origin/user
 </style>
 {% endblock %}
 
 {% block content %}
 <main>
     <div class="container">
+<<<<<<< HEAD
         <h1>Welcome!</h1>
     </div>
     </section>
@@ -52,5 +73,137 @@
         const useerID = {{ driver.driver_id }};
         window.location.href = `/driver-details/${useerID}`;
     });
+=======
+        <h1>Welcome to RideEase!</h1>
+    </div>
+    <section id="user-section">
+        <h2>Book A Ride:</h2>
+        <h5>Enter Details:</h5>
+        <form id="pickup-form" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="pick-id">Pickup Location:</label>
+                <input id="pick-id" class="form-control" placeholder="Enter Pickup Location" autocomplete="off"
+                       name="pick-id" required>
+            </div>
+            <div class="form-group">
+                <label for="drop-id">Drop Location:</label>
+                <input id="drop-id" class="form-control" placeholder="Enter Drop Location" autocomplete="off"
+                       name="drop-id" required>
+            </div>
+            <div class="form-group">
+                <label for="distance">Distance:</label>
+                <input id="distance" type="text" class="form-control">
+                <input id="distance" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="ride-type">Ride Type:</label>
+                <select id="ride-type" name="ride-type">
+                    <option value="car">Car</option>
+                    <option value="auto">Auto</option>
+                    <option value="bike">Bike</option>
+                </select>
+            </div>
+            <button id="book-ride" type="submit">Book Ride</button>
+        </form>
+    </section>
+    <a href="https://www.google.com/maps/"><img src="https://www.mapmyindia.com/api/move-api/images/card1.gif" height="250"></a>
+    <section id="us-section">
+        <h2>View Your Bookings:</h2>
+        <button id="prev-ride">VIEW</button>
+    </section>
+    <section id="ur-section">
+        <h2>View Your Details:</h2>
+        <button id="urdebt">VIEW</button>
+    </section>
+</main>
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.1.2-public-preview.15/services/services-web.min.js"></script>
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/plugins/SearchBox/3.1.3-public-preview.0/SearchBox-web.js"></script>
+
+<script>
+    var options = {
+        key: "WyKTEUb5UyBfGRwTbjAZWSBRravEdUXJ", // Replace with your TomTom API key
+        language: "en-GB",
+        limit: 5
+    };
+    var searchBoxOptions = {
+        searchOptions: options
+    };
+    
+    var pickInput = new tt.plugins.SearchBox(document.getElementById("pick-id"), searchBoxOptions);
+    var dropInput = new tt.plugins.SearchBox(document.getElementById("drop-id"), searchBoxOptions);
+    var ttSearchBox = new tt.plugins.SearchBox(tt.services, options);
+    var searchBoxHTML = ttSearchBox.getSearchBoxHTML();
+    var distanceInput = document.getElementById("distance");
+    
+    var calculateDistance = function () {
+        distanceInput.value = "Calculating...";
+        var picksdkjnjs = ttSearchBox.getSingleLocation(pickInput.value);
+        var dropojnj = ttSearchBox.getSingleLocation(dropInput.value);
+        var pickup = pickInput.getPlaces().filter(function (result) {
+            return result.type === 'POI' || result.type === 'Street' || result.type === 'CrossStreet';
+        })[0];
+        var dropoff = dropInput.getPlaces().filter(function (result) {
+            return result.type === 'POI' || result.type === 'Street' || result.type === 'CrossStreet';
+        })[0];
+    
+        if (pickup && dropoff) {
+            var routingService = tt.services.matrixRoutingV2;
+            var origin = [pickup.geometry.lng, pickup.geometry.lat];
+            var destinations = [[dropoff.geometry.lng, dropoff.geometry.lat]];
+    
+            routingService({
+                key: "WyKTEUb5UyBfGRwTbjAZWSBRravEdUXJ", // Replace with your TomTom API key
+                origins: [origin],
+                destinations: destinations,
+            })
+            .go()
+            .then(function (response) {
+                var results = response.matrix[0].results;
+                if (results.length > 0) {
+                    var distance = results[0].summary.lengthInMeters / 1000; // convert to kilometers
+                    console.log("Distance:", distance);
+                    distanceInput.value = distance.toFixed(2);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error calculating distance:", error);
+            });
+        } else {
+            distanceInput.value = "";
+        }
+    };
+    
+    pickInput.on('tomtom.placesearch.select', calculateDistance);
+    dropInput.on('tomtom.placesearch.select', calculateDistance);
+    
+    const pickupForm = document.querySelector('#pickup-form');
+    const bookRide = document.querySelector('#book-ride');
+    bookRide.addEventListener('click', (event) => {
+        event.preventDefault();
+        const distance = document.querySelector('#distance').value;
+        const distInt = parseInt(distance);
+        const rideType = document.querySelector('#ride-type').value;
+        const userID = "{{ user.user_id }}";
+        const pickup = document.querySelector('#pick-id').value;
+        const dropoff = document.querySelector('#drop-id').value;
+        const confirmationUrl = `/confirmation/${userID}/${distInt}/${rideType}/${pickup}/${dropoff}`;
+        window.location.href = confirmationUrl;
+    });
+    
+    const prevRide = document.querySelector('#prev-ride');
+    prevRide.addEventListener('click', () => {
+        const userID = "{{ user.user_id }}";
+        const userID2 = "{{ user.user_id }}";
+        window.location.href = `/bookings/${userID}/${userID2}`;
+    });
+    
+    const urDebt = document.querySelector('#urdebt');
+    urDebt.addEventListener('click', () => {
+        const userID = "{{ user.user_id }}";
+        window.location.href = `/useer-details/${userID}`;
+    });
+
+>>>>>>> origin/user
 </script>
 {% endblock %}
