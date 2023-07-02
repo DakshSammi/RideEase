@@ -1,0 +1,54 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% block content %}
+    <h1>Your Bookings</h1>
+    
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Booking_ID</th>
+                <th>Driver ID</th>
+                <th>Pickup</th>
+                <th>Dropoff</th>
+            </tr>
+        </thead>
+        <tbody>
+            <p>Thanks for your amazing service! Driver ID: {{driver.driver_id}} Contact for help: 070754****</p>
+            {% for dri in bookings %}
+                <tr>
+                    <td>{{ dri.booking_id }}</td>
+                    <td>{{ dri.dri_id }}</td>
+                    <td>{{ dri.pickup }}</td>
+                    <td>{{ dri.dropoff }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="complete" onclick=showMessage()>Complete Your Latest Trip</button>
+    <button id="goback">Go Back</button>
+    <section class="vh-100 bg-image"
+    style="background-image: url('https://i.pinimg.com/564x/90/a1/b5/90a1b5a89be1aaca8d655198b36dfcaf.jpg');">
+    </section>
+    <script>
+        document.getElementById("complete").addEventListener("click", function(){
+            console.log("done!");
+            const driver_id = {{ driver.driver_id }};
+            fetch(`/activate/${driver_id}`)
+                .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to activate driver.');
+                }
+                })
+                .catch(error => {
+                console.error(error);
+                });
+        });
+        function showMessage() {
+            alert("Thank you for completing your trip!");
+        }
+        document.getElementById("goback").addEventListener("click", function() {
+            const useerID = {{ driver.driver_id }};
+            window.location.href = "/homepage/" + useerID;
+        });
+    </script>
+{% endblock %}

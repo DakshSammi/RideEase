@@ -1,0 +1,25 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% block content %}
+  <h1>User Details</h1>
+  {% if user and user.user_id %}
+    <p>User ID: {{ user.user_id }}</p>
+    <p>First Name: {{ user.fname }}</p>
+    <p>Middle Name: {{ user.mname }}</p>
+    <p>Last Name: {{ user.lname }}</p>
+    <p>Status: {{ user.user_status }}</p>
+    <p>E-mail: {{ user.e_mail }}</p>
+    <!-- Add any other fields you want to display -->
+  {% else %}
+    <p>No user found for the given ID.</p>
+  {% endif %}
+  <section id="ur-section">
+    <button id="urdebt">Go Back</button>
+  </section>
+  <script>
+    document.getElementById("urdebt").addEventListener("click", function() {
+      const useerID = {{ user.user_id }};
+      window.location.href = "/homepage/" + useerID;
+    });
+  </script>
+{% endblock %}

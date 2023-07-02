@@ -1,0 +1,21 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% block content %}
+    <h1>Top 3 Most Popular Pickup Locations</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Pickup Location</th>
+            <th>Number of Rides</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pickup_location in pickup_locations %}
+            <tr>
+                <td>{{ pickup_location.pickup_location }}</td>
+                <td>{{ pickup_location.number_of_rides }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
