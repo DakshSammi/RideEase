@@ -1,0 +1,18 @@
+{% extends 'RideEase/layouts/main.html' %}
+
+{% block content %}
+  <h1>Driver Details</h1>
+  {% if driver %}
+    <p>Driver ID: {{ driver.driver_id }}</p>
+    <p>DOB: {{ driver.dob }}</p>
+    <p>First Name: {{ driver.fname }}</p>
+    <p>Middle Name: {{ driver.mname }}</p>
+    <p>Last Name: {{ driver.lname }}</p>
+    <p>Rating: {{ driver.driver_rating }}</p>
+    <p>Status: {{ driver.dr_status }}</p>
+    <p>E-mail: {{ driver.e_mail }}</p>
+    <!-- Add any other fields you want to display -->
+  {% else %}
+    <p>No driver found for the given ID.</p>
+  {% endif %}
+{% endblock %}
